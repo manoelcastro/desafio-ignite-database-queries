@@ -15,7 +15,7 @@ export class UsersRepository implements IUsersRepository {
     user_id,
   }: IFindUserWithGamesDTO): Promise<User> {
     // Complete usando ORM
-    const user = await this.repository.findOne(user_id);
+    const user = await this.repository.findOne(user_id,{relations: ["games"]});
     return user as User;    
   }
 
@@ -27,6 +27,6 @@ export class UsersRepository implements IUsersRepository {
     first_name,
     last_name,
   }: IFindUserByFullNameDTO): Promise<User[] | undefined> {
-    return this.repository.query('SELECT * FROM users WHEN first_name = LOWER $1 AND last_name = LOWER $2', [first_name, last_name]); // Complete usando raw query
+    return this.repository.query('SELECT * FROM users WHEN first_name = lower($1) AND last_name = lower($2)', [first_name, last_name]); // Complete usando raw query
   }
 }
